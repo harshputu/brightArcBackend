@@ -1,0 +1,334 @@
+{
+	"info": {
+		"_postman_id": "6b04969c-6e1f-4a1b-800c-4dc67b2c7ea2",
+		"name": "BrightArc API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36342555"
+	},
+	"item": [
+		{
+			"name": "getAllBlogs",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"title\": \"How to Build a Blog with Node.js\",\r\n\"image\": \"https://example.com/image.png\",\r\n\"content\": \"This blog explains how to build a blog platform using Node.js, Express, and MongoDB.\",\r\n\"author\": \"Jane Doe\",\r\n\"likeCount\": 5,\r\n\"commentCount\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateBlog",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"title\": \"Porche 911\",\r\n\"image\": \"https://example.com/image.png\",\r\n\"content\": \"Porche is Luxury\",\r\n\"author\": \"Harsh\",\r\n\"likeCount\": 6,\r\n\"commentCount\": 9,\r\n\"category\":\"Technology\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBlogBySlug",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"title\": \"Porche 911\",\r\n\"image\": \"https://example.com/image.png\",\r\n\"content\": \"Porche is Luxury\",\r\n\"author\": \"Harsh\",\r\n\"likeCount\": 6,\r\n\"commentCount\": 9,\r\n\"category\":\"Technology\"\r\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/ai-is-fantastic",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						"ai-is-fantastic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateBlogBySlug",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"title\": \"Hello I am new Mercedes\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/ai-is-fantastic",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						"ai-is-fantastic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteBlogBySlug",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"title\": \"Hello I am new Mercedes\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/hello-i-am-new-mercedes",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						"hello-i-am-new-mercedes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostCommentWithSlugId",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"user\":\"Vikram\",\r\n\"text\":\"Hey this car is amazing what do u do for living\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/porche-911/comments/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						"porche-911",
+						"comments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateStatusForABlog",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\":\"approved\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/porche-911/comments/683aaa5679011f9996b98f68/status",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						"porche-911",
+						"comments",
+						"683aaa5679011f9996b98f68",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllCommentsForABlog",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\":\"approved\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/porche-911/comments/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						"porche-911",
+						"comments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "likeAPost",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\":\"approved\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/porche-911/like",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						"porche-911",
+						"like"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unlikeAPost",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\":\"approved\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/blogs/porche-911/unlike",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"blogs",
+						"porche-911",
+						"unlike"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
