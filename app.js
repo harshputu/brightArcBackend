@@ -13,7 +13,7 @@ app.use("/api/blogs", blogRoutes);
 
 // MongoDB connection
 mongoose
-  .connect("mongodb://localhost:27017/tryDB", {
+  .connect("mongodb+srv://root:root@brightarc.y8mgjme.mongodb.net/", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
