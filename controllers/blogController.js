@@ -29,6 +29,16 @@ exports.getBlogBySlug = async (req, res) => {
   }
 };
 
+exports.getBlogByCategory = async(req,res) =>{
+  try {
+    const blog = await Blog.find({ category: req.params.category });
+    if (blog.length==0) return res.status(404).json({ error: " No Blogs With this Category" });
+    res.json(blog);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+}
+
 // exports.updateBlog = async (req, res) => {
 // try {
 // const updated = await Blog.findOneAndUpdate(

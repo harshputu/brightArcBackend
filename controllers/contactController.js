@@ -14,34 +14,47 @@ exports.submitContactForm = async (req, res) => {
     await contact.save();
     // Send email
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.office365.com",
+      port:587,
+      secure:false,
       auth: {
-        user: "putuharsh@gmail.com", // Replace with brightArc email whatever it will be
-        pass: "", // App password (not regular Gmail password) in case of gmail
+        user: "info@brightarc.in", // brightArc email 
+        pass: "kxlsqhjfrknwvzcy", // App password 
       },
+      tls:{
+        ciphers:'SSLv3'
+      }
     });
 
     const mailToSubmitter = {
-      from: "putuharsh@gmail.com",
-      to: "rackr7642@gmail.com",
-      subject: `New Lead - You have recieved a new form submission from ${name}`,
-      text: `Hi Admin,\n\n\nBelow person want to contact you\nName: ${name}\n
-  Email: ${email}\n
-  Mobile: ${mobile}\n
-  Found Us Via: ${source}\n
-  Message: ${message}\n
-  \n\nThanking You,
-  \nTeam BrightArc`,
-    };
+  from: "info@brightarc.in",
+  to: "info@brightarc.in",
+  subject: `New Lead - You have recieved a new form submission from ${name}`,
+  html: `
+    <p>Hi Admin,</p>
+    <p>Below person wants to contact you:</p>
+    <ul>
+      <li><strong>Name:</strong> ${name}</li>
+      <li><strong>Email:</strong> ${email}</li>
+      <li><strong>Mobile:</strong> ${mobile}</li>
+      <li><strong>Found Us Via:</strong> ${source}</li>
+      <li><strong>Message:</strong> ${message}</li>
+    </ul>
+    <p>Thanking You,<br>
+    Team BrightArc</p>
+  `
+  };
 
     const mailToCompany = {
-      from: "putuharsh@gmail.com",
-      to: "harshputu@gmail.com",
+      from: "info@brightarc.in",
+      to: email,
       subject:`We've recieved your message - Thank You for reaching out!`,
-      text: `Hi ${name},\n\n\nThank you for getting in touch with us!\n\n\nWe've received your message and our team will get back to you as soon as possible - usually within 24-48 hours. If your inquiry is urgent, feel free to reply to this E-Mail directly.
-  \n\n\nBest Regards,
-  \nBrightArc,
-  \nbrightarcURL`,
+      html: `Hi ${name},<br><br>
+    Thank you for getting in touch with us!<br><br>
+    We've received your message and our team will get back to you as soon as possible - usually within 24-48 hours. If your inquiry is urgent, feel free to reply to this E-Mail directly.<br>
+    <br>Best Regards,<br>
+    BrightArc,<br>
+    <a href="https://brightArc.in" target="_blank">BrightArc</a>`,
     };
 
     await transporter.sendMail(mailToSubmitter);
