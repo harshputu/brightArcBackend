@@ -1,10 +1,32 @@
 const Blog = require("../models/Blog");
 const slugify = require("slugify");
+const Category = require("../models/Category");
+
 exports.createBlog = async (req, res) => {
   try {
-    const blog = new Blog(req.body);
+    let { category, ...rest } = req.body;
+    console.log(category);
+    if (!category) {
+      return res.status(400).json({ error: "Category is required." });
+    }
+    // If category is not an ObjectId, look it up
+    if (!/^[0-9a-fA-F]{24}$/.test(category)) {
+      // Try by name, then by urlKey
+      let categoryDoc = await Category.findOne({ categoryName: category.toLowerCase() });
+      if (!categoryDoc) {
+        categoryDoc = await Category.findOne({ urlKey: category.toLowerCase() });
+      }
+      if (!categoryDoc) {
+        return res.status(400).json({ error: "Category does not exist." });
+      }
+      category = categoryDoc._id;
+    }
+
+    const blog = new Blog({ ...rest, category });
     await blog.save();
-    res.status(201).json(blog);
+
+    const populatedBlog = await Blog.findById(blog._id).populate("category");
+    res.status(201).json(populatedBlog);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -12,7 +34,7 @@ exports.createBlog = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().sort({ postDate: -1 });
+    const blogs = await Blog.find().sort({ postDate: -1 }).populate("category");
     res.json(blogs);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -21,7 +43,7 @@ exports.getAllBlogs = async (req, res) => {
 
 exports.getBlogBySlug = async (req, res) => {
   try {
-    const blog = await Blog.findOne({ slug: req.params.slug });
+    const blog = await Blog.findOne({ slug: req.params.slug }).populate("category");
     if (!blog) return res.status(404).json({ error: "Blog not found" });
     res.json(blog);
   } catch (err) {
@@ -29,29 +51,36 @@ exports.getBlogBySlug = async (req, res) => {
   }
 };
 
-exports.getBlogByCategory = async(req,res) =>{
+exports.getBlogsByCategory = async (req, res) => {
   try {
-    const blog = await Blog.find({ category: req.params.category });
-    if (blog.length==0) return res.status(404).json({ error: " No Blogs With this Category" });
-    res.json(blog);
-  } catch (err) {
-    res.status(500).json({error: err.message});
-  }
-}
+    const categoryParam = req.params.categoryName.trim().toLowerCase();
+    let categoryQuery = {};
 
-// exports.updateBlog = async (req, res) => {
-// try {
-// const updated = await Blog.findOneAndUpdate(
-// { slug: req.params.slug },
-// req.body,
-// { new: true, runValidators: true }
-// );
-// if (!updated) return res.status(404).json({ error: "Blog not found" });
-// res.json(updated);
-// } catch (err) {
-// res.status(400).json({ error: err.message });
-// }
-// };
+    // Check if param is a valid ObjectId
+    if (/^[0-9a-fA-F]{24}$/.test(categoryParam)) {
+      categoryQuery = { _id: categoryParam };
+    } else if (categoryParam.startsWith("url:")) {
+      // If prefixed with "url:", treat as urlKey
+      categoryQuery = { urlKey: categoryParam.replace(/^url:/, "") };
+    } else {
+      // Otherwise, treat as categoryName
+      categoryQuery = { categoryName: categoryParam };
+    }
+
+    const category = await Category.findOne(categoryQuery);
+    if (!category) {
+      return res.status(404).json({ error: "Category not found." });
+    }
+
+    const blogs = await Blog.find({ category: category._id }).populate("category");
+    if (blogs.length === 0) {
+      return res.status(404).json({ error: "No Blogs With this Category" });
+    }
+    res.status(200).json(blogs);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch blogs by category." });
+  }
+};
 
 exports.updateBlog = async (req, res) => {
   try {
@@ -89,20 +118,6 @@ exports.deleteBlog = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-//Just In Case we need a separate API on the basis of Cateogries
-// // GET /api/blogs?category=Technology
-// exports.getBlogsByCategory = async (req, res) => {
-// const { category } = req.query;
-// const query = category ? { category } : {};
-
-// try {
-// const blogs = await Blog.find(query);
-// res.json(blogs);
-// } catch (err) {
-// res.status(500).json({ error: err.message });
-// }
-// };
 
 exports.addComment = async (req, res) => {
   const { slug } = req.params;

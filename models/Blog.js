@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+const  categorySchema  = require("./Category");
+
 
 const commentSchema = new mongoose.Schema({
   user: String,
@@ -18,11 +20,7 @@ const blogSchema = new mongoose.Schema({
   image: String,
   content: { type: String, required: true },
   author: String,
-  category: {
-    type: String,
-    enum: ["Technology", "Health", "Travel"],
-    required: true,
-  },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
   postDate: { type: Date, default: Date.now },
   likeCount: { type: Number, default: 0 },
   commentCount: { type: Number, default: 0 },
