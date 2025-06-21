@@ -1,3 +1,4 @@
+require("dotenv").config();
 const Contact = require("../models/Contact");
 const nodemailer = require("nodemailer");
 
@@ -18,8 +19,8 @@ exports.submitContactForm = async (req, res) => {
       port:587,
       secure:false,
       auth: {
-        user: "info@brightarc.in", // brightArc email 
-        pass: "kxlsqhjfrknwvzcy", // App password 
+        user: process.env.ADMIN_EMAIL, // brightArc email 
+        pass: process.env.ADMIN_APP_PASS, // App password 
       },
       tls:{
         ciphers:'SSLv3'
