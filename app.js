@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 
 const corsOptions = {
-  origin: process.env.WHITELIST_URL || "http://localhost:3000",
+  origin: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
