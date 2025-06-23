@@ -98,12 +98,26 @@ exports.updateBlog = async (req, res) => {
 
     if (req.body.content) existingBlog.content = req.body.content;
     if (req.body.image) existingBlog.image = req.body.image;
-    if (req.body.category) existingBlog.category = req.body.category;
+    if (req.body.category) {
+      let categoryId = req.body.category;
+      if (!/^[0-9a-fA-F]{24}$/.test(categoryId)) {
+        let categoryDoc = await Category.findOne({ categoryName: categoryId.toLowerCase() });
+        if (!categoryDoc) {
+          categoryDoc = await Category.findOne({ urlKey: categoryId.toLowerCase() });
+        }
+        if (!categoryDoc) {
+          return res.status(400).json({ error: "Category does not exist." });
+        }
+        categoryId = categoryDoc._id;
+      }
+      existingBlog.category = categoryId;
+    }
     if (req.body.author) existingBlog.author = req.body.author;
 
     const updatedBlog = await existingBlog.save();
 
-    res.json(updatedBlog);
+    const populatedBlog = await Blog.findById(updatedBlog._id).populate("category");
+    res.json(populatedBlog);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
